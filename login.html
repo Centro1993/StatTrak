@@ -1,0 +1,92 @@
+//TODO login in stattrak.html integrieren, remember me
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap core CSS -->
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="resources/favicon.ico" type="image/icon"> <link rel="icon" href="resources/favicon.ico" type="image/icon">
+
+    <title>Stattrak</title>
+    <style>
+      .container {
+        width: 300px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <!--  <div id="headline">StatTrak</div>
+
+    <form id="loginForm">
+      <input type="text" id="steamid"><br />
+        <button id="submitButton" type="button">Log in</button>
+    </form>
+  <br />
+  <div id="statistics"></div>
+-->
+    <div class="container">
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Steam ID</label>
+        <input type="email" id="steamid" class="form-control" placeholder="Steam ID" required autofocus>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me" id="remember">
+            Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" id="submitButton">Sign in</button>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    var buttonEl = document.getElementById('submitButton');
+    var steamidEl = document.getElementById('steamid');
+    var checkEl = document.getElementById('remember');
+
+    var login = function () {
+      var xhttp = new XMLHttpRequest();
+      var reqPath = "/userLogin";
+      var remember = false;
+
+      if (checkEl.checked) {
+        remember = true;
+      }
+
+      var jsonPost = {
+        id: steamidEl.value,
+        remember: remember
+      };
+      var jsonPostString = JSON.stringify(jsonPost);
+
+      console.log(jsonPostString);
+
+      //antwort auf login erwarten
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          console.log("XMLHttpRequest answered");
+          window.location.assign("/stattrak");
+        }
+      };
+
+      xhttp.open("POST", reqPath, true);
+      xhttp.setRequestHeader("Content-type", "text/html");
+      xhttp.send(jsonPostString);
+      console.log("XMLHttpRequest send  " + reqPath);
+    }
+
+    buttonEl.addEventListener("click", login);
+
+    //regelmäßig nach neuen jsons abchecken
+    window.setTimeout(getLastEntry, 1000);
+  </script>
+
+</html>

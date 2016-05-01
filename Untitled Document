@@ -1,0 +1,34 @@
+
+//Collectionname: match/STEAMID
+var collection = 'match/' + id;
+//checken ob user matchcollection hat, ansonsten erstellen
+var cursor = db.collection(collection, function() {
+  //checken ob matchvorhanden, wenn ja größtes herauslesen, wenn nein erstes erstellen
+  var matchCount = db.collection(collection).count();
+  //matches vorhanden, größtes finden und zurückgeben
+  if (matchCount > 0) {
+    var lastMatch = db.collection.findOne({
+      $query: {},
+      $orderby: {
+        $natural: -1
+      }
+    }); //letzten eintrag in collection finden
+    callback(lastMatch.matchid, lastMatch.rounds.length);
+  } else {
+    //kein match vorhanden, erstes erstellen
+    var newMatchRet = db.collection(collection).insertOne({
+      matchId: 1,
+      matchStats: {},
+      rounds: [],
+      map: ''
+    }, function(err, result) {
+      assert.equal(err, null);
+      console.log(newMatchRet);
+      var newMatch = db.collection(collection).find({
+        '_id': newMatchRet.insertedId
+      });
+      callback(newMatch.matchid, newMatch.rounds.length);
+    });
+  }
+});
+}

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="resources/favicon.ico" type="image/icon">
+    <link rel="icon" href="resources/favicon.ico" type="image/icon">
+    <title>StatTrak</title>
+
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
+    <style>
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        border-collapse: collapse;
+        background-image: url("/resources/background.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      #header {
+        position: static;
+        z-index: 1;
+        width: 100%;
+        height: 40px;
+        background-color: black;
+        margin: 0;
+        padding: 0;
+        border-bottom: 4px;
+        border-bottom-style: solid;
+        border-bottom-color: grey;
+        overflow: hidden;
+      }
+
+      #header p {
+        color: #EEE;
+      }
+
+      h1 {
+        color: white;
+        text-align: center;
+        position: relative;
+        top: -20px;
+        font-size: 25px;
+        font-family: Waree, Book;
+      }
+
+      .userinfo {
+        font-size: 14px;
+        font-family: Helvetica;
+        font-style: italic;
+        color: white;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+
+      #buttonlistwrapper {
+        width: 15%;
+        height: 100%;
+      }
+
+      #buttonlist {
+        position: relative;
+        top: 100px;
+        width: inherit;
+        height: auto;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .buttons {
+        width: 170px;
+        height: 30px;
+        border-right: 4px;
+        border-bottom: 2px;
+        border-bottom-style: solid;
+        border-right-style: solid;
+        border-right-color: grey;
+        border-bottom-color: grey;
+        background-color: black;
+        color: white;
+        transition: background-color 0.5s ease;
+      }
+      .buttons:hover {
+        background-color: grey;
+      }
+
+      .buttons p {
+        position: relative;
+        text-align: center;
+        line-height: 30px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .pageWrapper {
+        position: relative;
+        color: white;
+        height: 100%;
+        z-index: 5;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">StatTrak</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active">
+              <a id="main" class="mainPage" onclick="setPageView('mainPage')">Main</a>
+            </li>
+            <li class="disabled">
+              <a id="livetracker" class="livetrackerPage" onclick="setPageView('livePage')">Livetracker</a>
+            </li>
+            <li>
+            <li class="disabled">
+              <a id="dlButton">Download .cfg</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+
+            <form class="navbar-form navbar-right">
+              <div id="loginForm" style="display: block;">
+                <li>
+                  <label>
+                    <input type="checkbox" value="remember-me" id="remember">
+                    Remember me
+                  </label>
+                </li>
+                <li>
+                  <div class="form-group">
+                    <input type="text" placeholder="Steam-Id" class="form-control login" id="steamId">
+                  </div>
+                  <button type="button" class="btn btn-success login" id="loginButton">Sign in</button>
+                </li>
+              </div>
+              <div id="logoutForm" style=" display: none;">
+                <li>
+                  <button type="button" class="btn login" id="logoutButton" style="background-color: red;">Log out</button>
+                </li>
+                <li>
+                  <p class="navbar-text login" style="padding-right: 20px;" id="id"></a>
+                </li>
+              </div>
+            </form>
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
+      </div>
+    </nav>
+    <!--- ende header -->
+    <div id="mainPageWrapper" style="display: none;" class="mainPage pageWrapper">
+      main
+    </div>
+    <div id="livetrackerPageWrapper" style="display: none;" class="livetrackerPage pageWrapper">
+      livetracker
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="resources/js/bootstrap.js"></script>
+    <script src="/resources/js/socket.io.js"></script>
+  </body>
+  <script>
+
+    //TODO chart.js für diagramm rendering einfügens
+    //TODO main einfügen
+    window.addEventListener("load", function () {
+      var loggedIn = false;
+      var lastTick = 0;
+      var steamIdEl = document.getElementById('steamId');
+
+      //seitenlinks
+      var cfgDlLink = document.getElementById('dlButton');
+      var liveLink = document.getElementById('livetracker');
+      var mainLink = document.getElementById('main');
+
+      //pageinhalt
+      var mainPage = document.getElementById('mainPageWrapper');
+      var livePage = document.getElementById('livetrackerPageWrapper');
+
+      var mainPageEls = document.getElementsByClassName('mainPage');
+      var livetrackerPageEls = document.getElementsByClassName('livetrackerPage');
+
+      //alle seiten hier mit wrapper und link einfügen
+      var pageWrapperArray = [mainPage, livePage];
+      var pageLinkArray = [mainLink, liveLink];
+
+      //loginkram
+      var loginEls = document.getElementsByClassName('login');
+      var loginEl = document.getElementById('login');
+      var loginFormEl = document.getElementById('loginForm');
+      var loginButtonEl = document.getElementById('loginButton');
+      var checkEl = document.getElementById('remember');
+      var logoutFormEl = document.getElementById('logoutForm');
+      var logoutButtonEl = document.getElementById('logoutButton');
+      var userId = document.getElementById('id');
+      var userNick = document.getElementById('nick');
+
+      //cookie-getter
+      function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ')
+            c = c.substring(1);
+          if (c.indexOf(name) == 0)
+            return c.substring(name.length, c.length);
+          }
+        return "";
+      }
+      //cookie löschen
+      function deleteCookie(name) {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
+
+      //element-sichtbarkeit togglen
+      function toggleVisibility(el) {
+        console.log(el.style.display);
+        if (el.style.display == "block") {
+          el.style.display = "none";
+        } else {
+          el.style.display = "block";
+        }
+        console.log(el.style.display);
+      }
+
+      //TODO seiteninhalt dynamisch ändern parentklasse <li> auf active setzen
+      function setPageView(page) {
+        //durchläuft pagesArray und stellt nur gewünschntes element auf sichtbar
+        pageWrapperArray.forEach(function (element, index, array) {
+          if (element == page) {
+            element.style.display = "block";
+            console.log("Page:");
+            console.log(element);
+            pageLinkArray[index].parentNode.className = "active";
+            console.log(pageLinkArray[index].parentNode.className)
+            console.log(pageLinkArray[index].parentNode)
+          } else {
+            element.style.display = "none";
+            pageLinkArray[index].parentNode.className = "";
+          }
+        });
+      }
+
+      //TODO login-klasse ein- oder ausblenden, dementsprechend parent pageLinkArrayli> class disable, seite auf main oder livetracker setzen und logout-button togglen, loggedIn togglen
+      function toggleLogin() {
+        if (loggedIn) { //eingeloggt, loginform ausblenden
+          cfgDlLink.parentNode.className = "";
+          liveLink.parentNode.className = "";
+        } else { //ausgeloggt, loginform einblenden
+          cfgDlLink.parentNode.className = "disabled";
+          liveLink.parentNode.className = "disabled";
+          setPageView(mainPage);
+        }
+        toggleVisibility(loginFormEl);
+        toggleVisibility(logoutForm);
+      }
+
+      //mit XMLHttpRequest .cfg file erstellen lassen, nach antwort herunterladen
+      var downloadCfg = function () {
+        //nur ausführen, wenn user eingeloggt ist
+        if (!loggedIn) {
+          return;
+        }
+        var userId = getCookie("login");
+
+        var xhttp = new XMLHttpRequest();
+        var reqPath = "/cacheCfgFile";
+
+        //serverantwort erwarten
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+            console.log("cfg file cached, downloading...");
+            window.open('gamestate_integration_stattrak.cfg');
+          };
+        }
+        xhttp.open("POST", reqPath, true);
+        xhttp.setRequestHeader("Content-type", "text/html");
+        xhttp.send(userId);
+        console.log("cfg file caching requested for " + userId);
+      }
+
+      //neue ticks auslesen
+      var getLastTick = function () {
+        var xhttp = new XMLHttpRequest();
+        var reqPath = "/getLastTick";
+        var pl = {
+          login: getCookie("login"),
+          lastTickId: lastTick
+        };
+        var plString = JSON.stringify(pl);
+
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+            document.getElementById("tick").innerHTML = JSON.parse(xhttp.responseText);
+            console.log(JSON.parse(xhttp.responseText));
+          }
+        };
+                xhttp.open("POST", reqPath, true);
+                xhttp.setRequestHeader("Content-type", "text/html");
+                xhttp.send(plString);
+                console.log(reqPath+" send, data:");
+                console.dir(pl);
+      }
+
+      //login bei server
+      function login() {
+        console.log("Login called...");
+        var xhttp = new XMLHttpRequest();
+        var reqPath = "/userLogin";
+        var remember = false;
+
+        if (checkEl.checked) {
+          remember = true;
+        }
+
+        var jsonPost = {
+          id: steamIdEl.value,
+          remember: remember
+        };
+        var jsonPostString = JSON.stringify(jsonPost);
+
+        console.log(jsonPostString);
+
+        //antwort auf login erwarten
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+          //nach erfolgreichem login links togglen, livetracker aufrufen und zu websocket connecten
+            console.log("XMLHttpRequest answered");
+            userId.textContent = "Id: " + getCookie("login");
+            loggedIn = true;
+            toggleLogin();
+            setPageView(livePage);
+            socket.emit('login', getCookie("login"));
+          }
+        };
+
+        xhttp.open("POST", reqPath, true);
+        xhttp.setRequestHeader("Content-type", "text/html");
+        xhttp.send(jsonPostString);
+        console.log("XMLHttpRequest send  " + reqPath);
+      }
+
+      //logout: cookies entfernen, loginform togglen, socket disconnecten
+      var logout = function () {
+        loggedIn = false;
+        setPageView(mainPage);
+        toggleLogin();
+        deleteCookie('login');
+        deleteCookie('nick');
+        socket.emit('logout');
+      }
+
+/*-----------ON LOAD------------------------*/
+
+//websocket mit default namespace verbinden
+  var socket = io('http://192.168.0.36:3000/');
+
+      //vor laden des fensters cookies überprüfen, wenn eingeloggt livetracker laden, ansonsten main. loggedIn und loginform togglen
+      if (getCookie("login") == "") { //nicht eingeloggt
+        loggedIn = false;
+        setPageView(mainPage);
+        console.log("not logged in");
+      } else { //eingeloggt
+        loggedIn = true;
+        setPageView(livePage);
+        toggleLogin();
+        console.log("logged in");
+        socket.emit('login', getCookie("login"));
+      }
+
+      //user credentials in header anzeigen
+      userId.textContent = "Id: " + getCookie("login");
+      var nick = getCookie("nick");
+      /*if (nick != "undefined") {
+        userNick.textContent = nick;
+      }*/
+
+            //Event-handling mit server
+      socket.on('connect', function(){if(loggedIn) {socket.emit('login', getCookie("login"))}});
+      socket.on('consoleLog', (text) => {console.log(text);})
+      socket.on('disconnect', function(){console.log("Disconnected from Stattrak-Socket.")})
+
+      //ticks vom server Empfangen
+      socket.on('sendTick', function(payload) {
+        var tick = JSON.parse(payload);
+        console.log("Tick empfangen...");
+        console.log(tick);
+      });
+
+      //Listener hinzufügen
+      loginButtonEl.addEventListener("click", login);
+      cfgDlLink.addEventListener("click", downloadCfg);
+      logoutButtonEl.addEventListener("click", logout);
+    });
+  </script>
