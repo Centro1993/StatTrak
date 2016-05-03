@@ -441,7 +441,17 @@ var len = chart.series[0].data.length;
         console.log("Health: "+tick.player.state.health);
         console.log("Time: "+tick.provider.timestamp);
         //tick zur chart hinzufügen
+        //health
         chart.series[0].addPoint([tick.provider.timestamp*1000, tick.player.state.health], len <99);
+        ////nullpunkte nach daten auf 0 oder steigenden daten einfügen, um linie zu beenden
+        for(var i = 0; i < chart.series.length; i++) {
+          console.log(chart.series[i])
+          //checken, ob letzter wert der serie 0 war
+          if(chart.series[i].data[chart.series[i].data.length-1].y == 0 ) {
+            //falls ja, nullpunkt eine millisekunde später einfügen
+            chart.series[i].addPoint([tick.provider.timestamp*1000+1, null], len <99);
+          } else if(chart.series[i].data[chart.series[i].data.length-2].y < )
+        }
       });
 
       //Listener hinzufügen
