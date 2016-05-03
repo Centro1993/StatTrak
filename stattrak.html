@@ -164,12 +164,14 @@
       </div>
     </nav>
     <!--- ende header -->
+    <!--anfang mainpage-->
     <div id="mainPageWrapper" style="display: block;" class="mainPage pageWrapper">
       <div style="width: 100%; height: 100%; color: blue; font-size: 200px;">MAINPAGE</div>
-    </div>
+    </div><!--ende mainpage-->
+    <!--anfang livetracker-->
     <div id="livetrackerPageWrapper" style="display: none;" class="livetrackerPage pageWrapper">
-      <div style="width: 100%; height: 100%; color: blue; font-size: 200px;">LIVETRACKER</div>
-    </div>
+      <div id="livetrackerChart" style="width:100%; height:400px;"></div>
+    </div><!--ende livetracker-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
@@ -262,6 +264,7 @@
 
       //TODO login-klasse ein- oder ausblenden, dementsprechend parent pageLinkArrayli> class disable, seite auf main oder livetracker setzen und logout-button togglen, loggedIn togglen
       function toggleLogin() {
+        console.log("Funktion: toggleLogin()");
         if (!loggedIn) { //eingeloggt, loginform ausblenden
           loggedIn = true;
           cfgDlLink.parentNode.className = "";
@@ -276,6 +279,8 @@
         toggleVisibility(loginFormEl);
         toggleVisibility(logoutForm);
       }
+
+      /*----------------------AJAX-FORMS--------------------------------*/
 
       //mit XMLHttpRequest .cfg file erstellen lassen, nach antwort herunterladen
       var downloadCfg = function () {
@@ -368,6 +373,28 @@
         socket.emit('logout');
       }
 
+      /*-------------------HICHCHARTS.JS-IMPLEMENTIERUNG-------------------------*/
+
+
+    $('#livetrackerChart').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Health Tracker'
+        },
+        xAxis: {
+            type: 'datetime',
+            minTickInterval: 1000*10, //10 seconds
+            minRange: 1000*30,
+            maxRange: 1000*155,
+        },
+    });
+
+    var chart = $('#livetrackerChart').highcharts();
+
+    chart.addSeries({"name":"health", "data":[[+new Date(), null]]});
+var len = chart.series[0].data.length;
       /*-----------ON LOAD------------------------*/
 
       //websocket mit default namespace verbinden
@@ -375,10 +402,11 @@
 
       //vor laden des fensters cookies überprüfen, wenn eingeloggt livetracker laden, ansonsten main. loggedIn und loginform togglen
       if (getCookie("login") == "") { //nicht eingeloggt
-        loggedIn = false;
+        loggedIn = true;
+        toggleLogin();
         console.log("not logged in");
       } else { //eingeloggt
-        loggedIn = true;
+        loggedIn = false;
         toggleLogin();
         console.log("logged in");
         socket.emit('login', getCookie("login"));
@@ -390,6 +418,8 @@
       /*if (nick != "undefined") {
         userNick.textContent = nick;
       }*/
+
+      /*----------SOCKET.IO-EVENTHANDLING---------*/
 
       //Event-handling mit server
       socket.on('connect', function () {
@@ -408,7 +438,10 @@
       socket.on('sendTick', function (payload) {
         var tick = JSON.parse(payload);
         console.log("Tick empfangen...");
-        console.log(tick);
+        console.log("Health: "+tick.player.state.health);
+        console.log("Time: "+tick.provider.timestamp);
+        //tick zur chart hinzufügen
+        chart.series[0].addPoint([tick.provider.timestamp*1000, tick.player.state.health], len <99);
       });
 
       //Listener hinzufügen
