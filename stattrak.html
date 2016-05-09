@@ -395,14 +395,16 @@
 
     var chart = $('#livetrackerChart').highcharts();
 
-//alle datentypen zum diagramm hinzufügen
+    //alle datentypen zum diagramm hinzufügen
+
+    var len = []; //datenanzahl für jede serie
     chart.addSeries({
       "name": "Health",
       "data": [
         [+new Date(), null]
       ]
     });
-    var len[0] = chart.series[0].data.length;
+    len[0] = chart.series[0].data.length;
 
     chart.addSeries({
       "name": "Armor",
@@ -410,7 +412,7 @@
         [+new Date(), null]
       ]
     });
-    var len[1] = chart.series[1].data.length;
+    len[1] = chart.series[1].data.length;
 
     /*-----------ON LOAD------------------------*/
 
@@ -459,14 +461,14 @@
       console.log("Time: " + tick.provider.timestamp);
       //TICK ZU DIAGRAMM HINZUFÜGEN
       //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
-      if(lastTick != null) {
+      if (lastTick != null) {
         //health
-        if(tick.player.state.health > lastTick.player.state.health) {
-          chart.series[0].addPoint([tick.provider.timestamp * 1000-1, null], len[0] < 99);
+        if (tick.player.state.health > lastTick.player.state.health) {
+          chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], len[0] < 99);
         }
         //armor
-        if(tick.player.state.armor > lastTick.player.state.armor) {
-          chart.series[1].addPoint([tick.provider.timestamp * 1000-1, null], len[1] < 99);
+        if (tick.player.state.armor > lastTick.player.state.armor) {
+          chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], len[1] < 99);
         }
       }
       //health
