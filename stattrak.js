@@ -83,11 +83,11 @@ if (portOpen) {
 
 //funktion payload in db einfügen
 var insertPayload = function(db, pl, callback) {
-  db.collection(pl.auth.token).insertOne(pl, function(err, result) {
+  db.collection(pl.player.steamid).insertOne(pl, function(err, result) {
     assert.equal(err, null);
     //collection ist die steamid des spielers
     console.log(pl);
-    console.log("Payload in Collection " + pl.auth.token + " eingefügt.");
+    console.log("Payload in Collection " + pl.player.steamid + " eingefügt.");
     callback(result);
   });
 }
@@ -259,7 +259,7 @@ var queryInsertPayload = function(db, pl, lastMatchId, newMatch, callbackMain) {
   } else {
     var matchId = lastMatchId;
     //collectionname: ticks/STEAMID/MATCHID
-    var tickCol = 'ticks/' + pl.auth.token + '/' + matchId;
+    var tickCol = 'ticks/' + pl.player.steamid + '/' + matchId;
     console.log("Payload wird angefügt, Collection: " + tickCol);
 
     async.waterfall([
