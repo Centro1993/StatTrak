@@ -380,44 +380,145 @@
 
     $('#livetrackerChart').highcharts({
       chart: {
-        type: 'line'
+        type: 'line',
+        zoomtype: 'x'
       },
       title: {
-        text: 'Health Tracker'
+        text: 'StatTrak'
       },
+      subtitle: {
+        text: 'No Match running'
+      },
+      plotOptions: {
+        series: {
+          marker: {
+            enabled: true
+          }
+        }
+      },
+      //TODO alle achsen einfügen
+      yAxis: [
+        //health-achse
+        {
+          labels: {
+            format: '{value} HP',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+          title: {
+            text: 'Health',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+        },
+        //armor-achse
+        {
+          labels: {
+            format: '{value} AP',
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            }
+          },
+          title: {
+            text: 'Armor',
+            style: {
+              color: Highcharts.getOptions().colors[1]
+            }
+          },
+        },
+        //money-achse
+        {
+          labels: {
+            format: '{value} $',
+            style: {
+              color: Highcharts.getOptions().colors[2]
+            }
+          },
+          title: {
+            text: 'Money',
+            style: {
+              color: Highcharts.getOptions().colors[2]
+            }
+          },
+          opposite: true
+        },
+        //roundkills-achse
+        {
+          labels: {
+            format: '{value} K',
+            style: {
+              color: Highcharts.getOptions().colors[3]
+            }
+          },
+          title: {
+            text: 'Kills',
+            style: {
+              color: Highcharts.getOptions().colors[3]
+            }
+          },
+          opposite: true
+        }
+      ],
       xAxis: {
         type: 'datetime',
-        minTickInterval: 1000 * 10, //10 seconds
+        //minTickInterval: 1000 * 0.5, //10 seconds
         minRange: 1000 * 30,
         maxRange: 1000 * 155
       },
+      tooltip: {
+        shared: true
+      }
     });
 
     var chart = $('#livetrackerChart').highcharts();
 
     //alle datentypen zum diagramm hinzufügen
-
-    var len = []; //datenanzahl für jede serie
     chart.addSeries({
       "name": "Health",
+      "yAxis": 0,
       "data": [
         [+new Date(), null]
-      ]
+      ],
+      tooltip: {
+        valueSuffix: ' HP'
+      }
     });
-    len[0] = chart.series[0].data.length;
 
     chart.addSeries({
       "name": "Armor",
+      "yAxis": 1,
+      "data": [
+        [+new Date(), null]
+      ],
+      tooltip: {
+        valueSuffix: ' AP'
+      }
+    });
+
+    chart.addSeries({
+      "name": "Money",
+      "yAxis": 2,
+      "data": [
+        [+new Date(), null]
+      ],
+      tooltip: {
+        valueSuffix: ' $'
+      }
+    });
+
+    chart.addSeries({
+      "name": "Round-Kills",
       "data": [
         [+new Date(), null]
       ]
     });
-    len[1] = chart.series[1].data.length;
 
     /*-----------ON LOAD------------------------*/
 
     //websocket mit default namespace verbinden
-    var socket = io('http://192.168.43.228:3000/');
+    var socket = io('http://192.168.0.36:3000/');
 
     //vor laden des fensters cookies überprüfen, wenn eingeloggt livetracker laden, ansonsten main. loggedIn und loginform togglen
     if (getCookie("login") == "") { //nicht eingeloggt
@@ -457,25 +558,44 @@
     socket.on('sendTick', function(payload) {
       var tick = JSON.parse(payload);
       console.log("Tick empfangen...");
-      console.log("Health: " + tick.player.state.health);
-      console.log("Time: " + tick.provider.timestamp);
+      console.log(chart);
       //TICK ZU DIAGRAMM HINZUFÜGEN
+      //checken, ob neues match begonnen hat
+      if (lastTick == null) {
+        //chartuntertitel setzen
+
+      } else if (lastTick.matchid != tick.matchid) {
+        //chart wipen
+        for (var i = 0; i < chart.series.length; i++) {
+          chart.series[i].setData([], true, false, false);
+        }
+        //TODO chartuntertitel aktualisieren
+
+      }
       //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
       if (lastTick != null) {
         //health
         if (tick.player.state.health > lastTick.player.state.health) {
-          chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], len[0] < 99);
+          chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
         }
         //armor
         if (tick.player.state.armor > lastTick.player.state.armor) {
-          chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], len[1] < 99);
+          chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
         }
       }
       //health
-      chart.series[0].addPoint([tick.provider.timestamp * 1000, tick.player.state.health], len[0] < 99);
+      chart.series[0].addPoint([tick.provider.timestamp * 1000, tick.player.state.health], false, true, true);
       //armor
-      chart.series[1].addPoint([tick.provider.timestamp * 1000, tick.player.state.armor], len[1] < 99);
+      chart.series[1].addPoint([tick.provider.timestamp * 1000, tick.player.state.armor], false, true, true);
+      //money
+      chart.series[2].addPoint([tick.provider.timestamp * 1000, tick.player.state.money], false, true, true);
+      //roundkills
+      //TODO headshots markieren
+      //TODO scalen
+      chart.series[3].addPoint([tick.provider.timestamp * 1000, tick.player.state['round_kills']], false, true, true);
 
+      //nach hinzufügen aller sichtbaren punkte chart redraw callen
+      chart.redraw();
 
       ////nullpunkte nach daten auf 0 oder steigenden daten einfügen, um linie zu beenden
       for (var i = 0; i < chart.series.length; i++) {
@@ -483,7 +603,7 @@
           //checken, ob letzter wert der serie 0 war
         if (chart.series[i].data[chart.series[i].data.length - 1].y == 0) {
           //falls ja, nullpunkt eine millisekunde später einfügen
-          chart.series[i].addPoint([tick.provider.timestamp * 1000 + 1, null], len < 99);
+          chart.series[i].addPoint([tick.provider.timestamp * 1000 + 1, null], false);
         } //else if(chart.series[i].data[chart.series[i].data.length-2].y < )
         //TODO bei steigenden daten vorher nullpunkt einfügen
         //letzten tick zum vergleich abspeichern

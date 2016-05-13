@@ -199,6 +199,8 @@ var queryInsertPayload = function(db, pl, lastMatchId, newMatch, callbackMain) {
     matchId = lastMatchId + 1;
     //neue tickid an pl anfügen
     pl.tickid = 1;
+    //matchid an pl anhängen
+    pl.matchid = matchId;
     //collectionname: ticks/STEAMID/MATCHID
     var collection = 'ticks/' + pl.player.steamid + '/' + matchId;
     console.log("Neue tickcollection wird erstellt, Collection: " + collection);
@@ -258,6 +260,8 @@ var queryInsertPayload = function(db, pl, lastMatchId, newMatch, callbackMain) {
     }
   } else {
     var matchId = lastMatchId;
+    //matchid an pl anfügen
+    pl.matchid = matchId;
     //collectionname: ticks/STEAMID/MATCHID
     var tickCol = 'ticks/' + pl.player.steamid + '/' + matchId;
     console.log("Payload wird angefügt, Collection: " + tickCol);
@@ -282,6 +286,7 @@ var queryInsertPayload = function(db, pl, lastMatchId, newMatch, callbackMain) {
         //tickId inkrementieren und anfügen
         lastTickId++;
         pl.tickid = lastTickId;
+        //matchid anfügen
         console.log("Letzten Tick gefunden, neue TickId: " + pl.tickid);
         callback(null, db, pl, tickCol);
       });
