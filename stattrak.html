@@ -332,6 +332,7 @@
     }
 
     //login bei server
+    //TODO input überprüfen!
     function login() {
       console.log("Login called...");
       var xhttp = new XMLHttpRequest();
@@ -380,8 +381,9 @@
 
     $('#livetrackerChart').highcharts({
       chart: {
-        type: 'line',
-        zoomtype: 'x'
+        type: 'spline',
+        zoomtype: 'x',
+        alignTicks: false
       },
       title: {
         text: 'StatTrak'
@@ -400,6 +402,9 @@
       yAxis: [
         //health-achse
         {
+          min: 0,
+          max:100,
+          startOnTick: false,
           labels: {
             format: '{value} HP',
             style: {
@@ -415,6 +420,9 @@
         },
         //armor-achse
         {
+          min: 0,
+          max:100,
+          startOnTick: false,
           labels: {
             format: '{value} AP',
             style: {
@@ -430,6 +438,11 @@
         },
         //money-achse
         {
+          min: 0,
+          max: 16000,
+          startOnTick: false,
+          endOnTick: false,
+          gridLineWidth: 0,
           labels: {
             format: '{value} $',
             style: {
@@ -446,8 +459,12 @@
         },
         //roundkills-achse
         {
+          min: 0,
+          max: 5,
+          startOnTick: false,
+          gridLineWidth: 0,
           labels: {
-            format: '{value} K',
+            format: '{value}',
             style: {
               color: Highcharts.getOptions().colors[3]
             }
@@ -465,7 +482,7 @@
         type: 'datetime',
         //minTickInterval: 1000 * 0.5, //10 seconds
         minRange: 1000 * 30,
-        maxRange: 1000 * 155
+        maxRange: 1000 * 155,
       },
       tooltip: {
         shared: true
@@ -558,20 +575,35 @@
     socket.on('sendTick', function(payload) {
       var tick = JSON.parse(payload);
       console.log("Tick empfangen...");
-      console.log(chart);
+      console.dir(tick);
+      //console.log(chart);
       //TICK ZU DIAGRAMM HINZUFÜGEN
-      //checken, ob neues match begonnen hat
-      if (lastTick == null) {
-        //chartuntertitel setzen
 
-      } else if (lastTick.matchid != tick.matchid) {
+      if (lastTick == null) {
+
+      }  //checken, ob neues match begonnen hat
+      else if (lastTick.matchid != tick.matchid) {
+        console.log("Neues match!!");
         //chart wipen
         for (var i = 0; i < chart.series.length; i++) {
           chart.series[i].setData([], true, false, false);
         }
-        //TODO chartuntertitel aktualisieren
 
+      } else if(lastTick.map['round'] != tick.map['round']) {
+        console.log("Neue runde!");
+        //plotline hinzufügen
+        chart.xAxis[0].addPlotLine({
+                //neue runde markieren
+                color: 'red',
+                width: 2,
+                value: tick.provider.timestamp*1000,
+                dashStyle: 'longdashdot'
+            });
       }
+      //chartuntertitel ändern
+      chart.setTitle({text: "StatTrak"}, {text: "Match: "+tick.matchid+", Round: "+tick.map['round']}, false);
+
+      if(lastTick != null )
       //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
       if (lastTick != null) {
         //health
@@ -589,6 +621,7 @@
       chart.series[1].addPoint([tick.provider.timestamp * 1000, tick.player.state.armor], false, true, true);
       //money
       chart.series[2].addPoint([tick.provider.timestamp * 1000, tick.player.state.money], false, true, true);
+      console.log(chart.series[2].data)
       //roundkills
       //TODO headshots markieren
       //TODO scalen
@@ -597,9 +630,8 @@
       //nach hinzufügen aller sichtbaren punkte chart redraw callen
       chart.redraw();
 
-      ////nullpunkte nach daten auf 0 oder steigenden daten einfügen, um linie zu beenden
+    /*  ////nullpunkte nach daten auf 0 oder steigenden daten einfügen, um linie zu beenden
       for (var i = 0; i < chart.series.length; i++) {
-        console.log(chart.series[i])
           //checken, ob letzter wert der serie 0 war
         if (chart.series[i].data[chart.series[i].data.length - 1].y == 0) {
           //falls ja, nullpunkt eine millisekunde später einfügen
@@ -607,8 +639,8 @@
         } //else if(chart.series[i].data[chart.series[i].data.length-2].y < )
         //TODO bei steigenden daten vorher nullpunkt einfügen
         //letzten tick zum vergleich abspeichern
-        lastTick = tick;
-      }
+      }*/
+      lastTick = tick;
     });
 
     //Listener hinzufügen

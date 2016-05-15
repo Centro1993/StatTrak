@@ -204,6 +204,13 @@ var queryInsertPayload = function(db, pl, lastMatchId, newMatch, callbackMain) {
     //collectionname: ticks/STEAMID/MATCHID
     var collection = 'ticks/' + pl.player.steamid + '/' + matchId;
     console.log("Neue tickcollection wird erstellt, Collection: " + collection);
+
+    //wenn user an websocket verbunden, payload senden
+    //hier senden, damit matchid mitgeschickt wird
+    if (socketListeners.indexOf(pl.player.steamid) > -1) {
+      sendTick(pl);
+    }
+
     //neue tickcollection erstellen
     async.waterfall([
       async.apply(createColl, db, pl, collection, matchId),
@@ -265,6 +272,12 @@ var queryInsertPayload = function(db, pl, lastMatchId, newMatch, callbackMain) {
     //collectionname: ticks/STEAMID/MATCHID
     var tickCol = 'ticks/' + pl.player.steamid + '/' + matchId;
     console.log("Payload wird angefügt, Collection: " + tickCol);
+
+    //wenn user an websocket verbunden, payload senden
+    //hier senden, damit matchid mitgeschickt wird
+    if (socketListeners.indexOf(pl.player.steamid) > -1) {
+      sendTick(pl);
+    }
 
     async.waterfall([
       async.apply(queryLastTick, db, pl, tickCol),
@@ -528,7 +541,7 @@ var handleRequest = function(req, res) {
     }
     //relativen ressourcenpfad setzen
     dispatcher.setStatic('resources');
-    dispatcher.setStaticDirname('.');
+    dispatcher.setStaticDirname('/');
 
     /*-----------------------CS-DATEN EMPFANGEN--------------------------------------------------*/
     dispatcher.onPost("/", function(req, res) {
@@ -597,11 +610,6 @@ var handleRequest = function(req, res) {
             //TODO menücheck
             if (matchLive) {
               console.log(chalk.green("Match live!"));
-
-              //wenn user an websocket verbunden, payload senden
-              if (socketListeners.indexOf(payload.player.steamid) > -1) {
-                sendTick(payload);
-              }
 
               mdb.connect(url, function(err, db) {
                 assert.equal(err, null);
