@@ -878,40 +878,6 @@ var handleRequest = function(req, res) {
         res.end();
       });
     });
-
-
-    //TODO letzte Ticks auslesen
-    dispatcher.onPost("/getLastTick", function(req, res) {
-      //login und letzten Tick erhalten
-      var reqPl = JSON.parse(req.body);
-      var login = reqPl.login;
-      var lastTick = reqPl.lastTickId;
-
-      mdb.connect(url, function(err, db) {
-        assert.equal(err, null);
-        //db query last ticks
-        queryNewTick(db, login, function(matchid, lastTick) {
-          //kein neuer tick
-          if (typeof ticks === 'undefined') {
-            res.writeHead(200, {
-              'content-type': 'text/plain'
-            });
-            res.write('no new ticks');
-            res.end('\n');
-          } //neue ticks senden
-          else {
-            //newTicks.forEach()
-            response.writeHead(200, {
-              'content-type': 'text/json'
-            });
-            //response
-            response.write(JSON.stringify(ticks));
-            response.end('\n');
-          }
-
-        })
-      })
-    })
   }
 }
 

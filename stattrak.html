@@ -2,652 +2,672 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="resources/favicon.ico" type="image/icon">
-  <link rel="icon" href="resources/favicon.ico" type="image/icon">
-  <title>StatTrak</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="resources/favicon.ico" type="image/icon">
+    <link rel="icon" href="resources/favicon.ico" type="image/icon">
+    <title>StatTrak</title>
 
-  <link href="resources/css/bootstrap.css" rel="stylesheet">
-  <style>
-    body,
-    html {
-      height: 100%;
-      margin: 0;
-      border-collapse: collapse;
-      background-image: url("/resources/background.jpg");
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            border-collapse: collapse;
+            background-image: url("/resources/background.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
-    #header {
-      position: static;
-      width: 100%;
-      height: 40px;
-      background-color: black;
-      margin: 0;
-      padding: 0;
-      border-bottom: 4px;
-      border-bottom-style: solid;
-      border-bottom-color: grey;
-      overflow: hidden;
-    }
+        #header {
+            position: static;
+            width: 100%;
+            height: 40px;
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            border-bottom: 4px;
+            border-bottom-style: solid;
+            border-bottom-color: grey;
+            overflow: hidden;
+        }
 
-    #header p {
-      color: #EEE;
-    }
+        #header p {
+            color: #EEE;
+        }
 
-    h1 {
-      color: white;
-      text-align: center;
-      position: relative;
-      top: -20px;
-      font-size: 25px;
-      font-family: Waree, Book;
-    }
+        h1 {
+            color: white;
+            text-align: center;
+            position: relative;
+            top: -20px;
+            font-size: 25px;
+            font-family: Waree, Book;
+        }
 
-    .userinfo {
-      font-size: 14px;
-      font-family: Helvetica;
-      font-style: italic;
-      color: white;
-      padding-left: 15px;
-      padding-right: 15px;
-    }
+        .userinfo {
+            font-size: 14px;
+            font-family: Helvetica;
+            font-style: italic;
+            color: white;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
 
-    #buttonlistwrapper {
-      width: 15%;
-      height: 100%;
-    }
+        #buttonlistwrapper {
+            width: 15%;
+            height: 100%;
+        }
 
-    #buttonlist {
-      position: relative;
-      top: 100px;
-      width: inherit;
-      height: auto;
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
+        #buttonlist {
+            position: relative;
+            top: 100px;
+            width: inherit;
+            height: auto;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
 
-    .buttons {
-      width: 170px;
-      height: 30px;
-      border-right: 4px;
-      border-bottom: 2px;
-      border-bottom-style: solid;
-      border-right-style: solid;
-      border-right-color: grey;
-      border-bottom-color: grey;
-      background-color: black;
-      color: white;
-      transition: background-color 0.5s ease;
-    }
+        .buttons {
+            width: 170px;
+            height: 30px;
+            border-right: 4px;
+            border-bottom: 2px;
+            border-bottom-style: solid;
+            border-right-style: solid;
+            border-right-color: grey;
+            border-bottom-color: grey;
+            background-color: black;
+            color: white;
+            transition: background-color 0.5s ease;
+        }
 
-    .buttons:hover {
-      background-color: grey;
-    }
+        .buttons:hover {
+            background-color: grey;
+        }
 
-    .buttons p {
-      position: relative;
-      text-align: center;
-      line-height: 30px;
-      margin: 0;
-      padding: 0;
-    }
+        .buttons p {
+            position: relative;
+            text-align: center;
+            line-height: 30px;
+            margin: 0;
+            padding: 0;
+        }
 
-    .pageWrapper {
-      position: relative;
-      color: white;
-      height: 100%;
-      z-index: 5;
-    }
-  </style>
+        .pageWrapper {
+            position: relative;
+            color: white;
+            height: 100%;
+            z-index: 5;
+        }
+    </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand">StatTrak</a>
-      </div>
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <li class="active">
-            <a id="main" class="mainPage">Main</a>
-          </li>
-          <li class="disabled">
-            <a id="livetracker" class="livetrackerPage">Livetracker</a>
-          </li>
-          <li>
-            <li class="disabled">
-              <a id="dlButton">Download .cfg</a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">StatTrak</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a id="main" class="mainPage">Main</a>
+                    </li>
+                    <li class="disabled">
+                        <a id="livetracker" class="livetrackerPage">Livetracker</a>
+                    </li>
+                    <li>
+                        <li class="disabled">
+                            <a id="dlButton">Download .cfg</a>
+                        </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
 
-          <form class="navbar-form navbar-right">
-            <div id="loginForm" style="display: block;">
-              <li>
-                <label>
-                  <input type="checkbox" value="remember-me" id="remember"> Remember me
-                </label>
-              </li>
-              <li>
-                <div class="form-group">
-                  <input type="text" placeholder="Steam-Id" class="form-control login" id="steamId">
-                </div>
-                <button type="button" class="btn btn-success login" id="loginButton">Sign in</button>
-              </li>
+                    <form class="navbar-form navbar-right">
+                        <div id="loginForm" style="display: block;">
+                            <li>
+                                <label>
+                                    <input type="checkbox" value="remember-me" id="remember"> Remember me
+                                </label>
+                            </li>
+                            <li>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Steam-Id" class="form-control login" id="steamId">
+                                </div>
+                                <button type="button" class="btn btn-success login" id="loginButton">Sign in</button>
+                            </li>
+                        </div>
+                        <div id="logoutForm" style=" display: none;">
+                            <li>
+                                <button type="button" class="btn login" id="logoutButton" style="background-color: red;">Log out</button>
+                            </li>
+                            <li>
+                                <p class="navbar-text login" style="padding-right: 20px;" id="id">
+                                    </a>
+                            </li>
+                        </div>
+                    </form>
+                </ul>
             </div>
-            <div id="logoutForm" style=" display: none;">
-              <li>
-                <button type="button" class="btn login" id="logoutButton" style="background-color: red;">Log out</button>
-              </li>
-              <li>
-                <p class="navbar-text login" style="padding-right: 20px;" id="id">
-                  </a>
-              </li>
-            </div>
-          </form>
-        </ul>
-      </div>
-      <!--/.nav-collapse -->
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+    <!--- ende header -->
+    <!--anfang mainpage-->
+    <div id="mainPageWrapper" style="display: block;" class="mainPage pageWrapper">
+        <div style="width: 100%; height: 100%; color: blue; font-size: 200px;">MAINPAGE</div>
     </div>
-  </nav>
-  <!--- ende header -->
-  <!--anfang mainpage-->
-  <div id="mainPageWrapper" style="display: block;" class="mainPage pageWrapper">
-    <div style="width: 100%; height: 100%; color: blue; font-size: 200px;">MAINPAGE</div>
-  </div>
-  <!--ende mainpage-->
-  <!--anfang livetracker-->
-  <div id="livetrackerPageWrapper" style="display: none;" class="livetrackerPage pageWrapper">
-    <div id="livetrackerChart" style="width:100%; height:400px;"></div>
-  </div>
-  <!--ende livetracker-->
+    <!--ende mainpage-->
+    <!--anfang livetracker-->
+    <div id="livetrackerPageWrapper" style="display: none;" class="livetrackerPage pageWrapper">
+        <div id="livetrackerChart" style="width:100%; height:400px;"></div>
+    </div>
+    <!--ende livetracker-->
 
-  <!--LIBRARIES IMPORTIEREN----------------------->
-  <script src="/resources/js/jquery.js"></script>
-  <script src="resources/js/bootstrap.js"></script>
-  <script src="/resources/js/socket.io.js"></script>
-  <script src="/resources/js/highcharts.js"></script>
+    <!--LIBRARIES IMPORTIEREN----------------------->
+    <script src="/resources/js/jquery.js"></script>
+    <script src="resources/js/bootstrap.js"></script>
+    <script src="/resources/js/socket.io.js"></script>
+    <script src="/resources/js/highcharts.js"></script>
 </body>
 <script>
-  //TODO mainpage einfügen
-  window.addEventListener("load", function() {
-    var loggedIn = false;
-    var lastTick = 0;
-    var steamIdEl = document.getElementById('steamId');
+    //TODO mainpage einfügen
+    window.addEventListener("load", function() {
+        var loggedIn = false;
+        var lastTick = 0;
+        var steamIdEl = document.getElementById('steamId');
 
-    //seitenlinks
-    var cfgDlLink = document.getElementById('dlButton');
-    var liveLink = document.getElementById('livetracker');
-    var mainLink = document.getElementById('main');
+        //seitenlinks
+        var cfgDlLink = document.getElementById('dlButton');
+        var liveLink = document.getElementById('livetracker');
+        var mainLink = document.getElementById('main');
 
-    //pageinhalt
-    var mainPage = document.getElementById('mainPageWrapper');
-    var livePage = document.getElementById('livetrackerPageWrapper');
+        //pageinhalt
+        var mainPage = document.getElementById('mainPageWrapper');
+        var livePage = document.getElementById('livetrackerPageWrapper');
 
-    var mainPageEls = document.getElementsByClassName('mainPage');
-    var livetrackerPageEls = document.getElementsByClassName('livetrackerPage');
+        var mainPageEls = document.getElementsByClassName('mainPage');
+        var livetrackerPageEls = document.getElementsByClassName('livetrackerPage');
 
-    //alle seiten hier mit wrapper und link einfügen
-    var pageIdArray = [main, livetracker]
-    var pageWrapperArray = [mainPage, livePage];
-    var pageLinkArray = [mainLink, liveLink];
+        //alle seiten hier mit wrapper und link einfügen
+        var pageIdArray = [main, livetracker]
+        var pageWrapperArray = [mainPage, livePage];
+        var pageLinkArray = [mainLink, liveLink];
 
-    //loginkram
-    var loginEls = document.getElementsByClassName('login');
-    var loginEl = document.getElementById('login');
-    var loginFormEl = document.getElementById('loginForm');
-    var loginButtonEl = document.getElementById('loginButton');
-    var checkEl = document.getElementById('remember');
-    var logoutFormEl = document.getElementById('logoutForm');
-    var logoutButtonEl = document.getElementById('logoutButton');
-    var userId = document.getElementById('id');
-    var userNick = document.getElementById('nick');
+        //loginkram
+        var loginEls = document.getElementsByClassName('login');
+        var loginEl = document.getElementById('login');
+        var loginFormEl = document.getElementById('loginForm');
+        var loginButtonEl = document.getElementById('loginButton');
+        var checkEl = document.getElementById('remember');
+        var logoutFormEl = document.getElementById('logoutForm');
+        var logoutButtonEl = document.getElementById('logoutButton');
+        var userId = document.getElementById('id');
+        var userNick = document.getElementById('nick');
 
-    //spieldaten
-    var lastTick = null;
+        //spieldaten
+        var lastTick = null;
 
-    //cookie-getter
-    function getCookie(cname) {
-      var name = cname + "=";
-      var ca = document.cookie.split(';');
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ')
-          c = c.substring(1);
-        if (c.indexOf(name) == 0)
-          return c.substring(name.length, c.length);
-      }
-      return "";
-    }
-    //cookie löschen
-    function deleteCookie(name) {
-      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    }
+        //highcharts
+        var shift = false;
+        var maxTimeSpanDisplay = 155*1000;
 
-    //element-sichtbarkeit togglen
-    function toggleVisibility(el) {
-      if (el.style.display == "block") {
-        el.style.display = "none";
-      } else {
-        el.style.display = "block";
-      }
-    }
-
-    //TODO seiteninhalt dynamisch ändern parentklasse <li> auf active setzen
-    function setPageView(page) {
-      //durchläuft pagesArray und stellt nur gewünschntes element auf sichtbar
-      console.log("funktion setPageView()");
-      if (loggedIn)
-        for (var i = 0; i < pageIdArray.length; i++) {
-          if (pageIdArray[i] == this || pageIdArray[i] == page) {
-            pageWrapperArray[i].style.display = "block";
-            console.log("Page:");
-            console.log(pageWrapperArray[i]);
-            pageLinkArray[i].parentNode.className = "active";
-          } else {
-            pageWrapperArray[i].style.display = "none";
-            pageLinkArray[i].parentNode.className = "";
-          }
+        //cookie-getter
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ')
+                    c = c.substring(1);
+                if (c.indexOf(name) == 0)
+                    return c.substring(name.length, c.length);
+            }
+            return "";
         }
-    }
-
-    //TODO login-klasse ein- oder ausblenden, dementsprechend parent pageLinkArrayli> class disable, seite auf main oder livetracker setzen und logout-button togglen, loggedIn togglen
-    function toggleLogin() {
-      console.log("Funktion: toggleLogin()");
-      if (!loggedIn) { //eingeloggt, loginform ausblenden
-        loggedIn = true;
-        cfgDlLink.parentNode.className = "";
-        liveLink.parentNode.className = "";
-        setPageView(pageIdArray[1]);
-      } else { //ausgeloggt, loginform einblenden
-        setPageView(pageIdArray[0]);
-        cfgDlLink.parentNode.className = "disabled";
-        liveLink.parentNode.className = "disabled";
-        loggedIn = false;
-      }
-      toggleVisibility(loginFormEl);
-      toggleVisibility(logoutForm);
-    }
-
-    /*----------------------AJAX-FORMS--------------------------------*/
-
-    //mit XMLHttpRequest .cfg file erstellen lassen, nach antwort herunterladen
-    var downloadCfg = function() {
-      //nur ausführen, wenn user eingeloggt ist
-      if (!loggedIn) {
-        return;
-      }
-      var userId = getCookie("login");
-
-      var xhttp = new XMLHttpRequest();
-      var reqPath = "/cacheCfgFile";
-
-      //serverantwort erwarten
-      xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-          console.log("cfg file cached, downloading...");
-          window.open('gamestate_integration_stattrak.cfg');
-        };
-      }
-      xhttp.open("POST", reqPath, true);
-      xhttp.setRequestHeader("Content-type", "text/html");
-      xhttp.send(userId);
-      console.log("cfg file caching requested for " + userId);
-    }
-
-    //neue ticks auslesen
-    var getLastTick = function() {
-      var xhttp = new XMLHttpRequest();
-      var reqPath = "/getLastTick";
-      var pl = {
-        login: getCookie("login"),
-        lastTickId: lastTick
-      };
-      var plString = JSON.stringify(pl);
-
-      xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-          document.getElementById("tick").innerHTML = JSON.parse(xhttp.responseText);
-          console.log(JSON.parse(xhttp.responseText));
-        }
-      };
-      xhttp.open("POST", reqPath, true);
-      xhttp.setRequestHeader("Content-type", "text/html");
-      xhttp.send(plString);
-      console.log(reqPath + " send, data:");
-      console.dir(pl);
-    }
-
-    //login bei server
-    //TODO input überprüfen!
-    function login() {
-      console.log("Login called...");
-      var xhttp = new XMLHttpRequest();
-      var reqPath = "/userLogin";
-      var remember = false;
-
-      if (checkEl.checked) {
-        remember = true;
-      }
-
-      var jsonPost = {
-        id: steamIdEl.value,
-        remember: remember
-      };
-      var jsonPostString = JSON.stringify(jsonPost);
-
-      console.log(jsonPostString);
-
-      //antwort auf login erwarten
-      xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-          //nach erfolgreichem login links togglen, livetracker aufrufen und zu websocket connecten
-          console.log("XMLHttpRequest answered");
-          userId.textContent = "Id: " + getCookie("login");
-          toggleLogin();
-          socket.emit('login', getCookie("login"));
-        }
-      };
-
-      xhttp.open("POST", reqPath, true);
-      xhttp.setRequestHeader("Content-type", "text/html");
-      xhttp.send(jsonPostString);
-      console.log("XMLHttpRequest send  " + reqPath);
-    }
-
-    //logout: cookies entfernen, loginform togglen, socket disconnecten
-    var logout = function() {
-      toggleLogin();
-      deleteCookie('login');
-      deleteCookie('nick');
-      socket.emit('logout');
-    }
-
-    /*-------------------HICHCHARTS.JS-IMPLEMENTIERUNG-------------------------*/
-
-
-    $('#livetrackerChart').highcharts({
-      chart: {
-        type: 'spline',
-        zoomtype: 'x',
-        alignTicks: false
-      },
-      title: {
-        text: 'StatTrak'
-      },
-      subtitle: {
-        text: 'No Match running'
-      },
-      plotOptions: {
-        series: {
-          marker: {
-            enabled: true
-          }
-        }
-      },
-      //TODO alle achsen einfügen
-      yAxis: [
-        //health-achse
-        {
-          min: 0,
-          max:100,
-          startOnTick: false,
-          labels: {
-            format: '{value} HP',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
-          },
-          title: {
-            text: 'Health',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
-          },
-        },
-        //armor-achse
-        {
-          min: 0,
-          max:100,
-          startOnTick: false,
-          labels: {
-            format: '{value} AP',
-            style: {
-              color: Highcharts.getOptions().colors[1]
-            }
-          },
-          title: {
-            text: 'Armor',
-            style: {
-              color: Highcharts.getOptions().colors[1]
-            }
-          },
-        },
-        //money-achse
-        {
-          min: 0,
-          max: 16000,
-          startOnTick: false,
-          endOnTick: false,
-          gridLineWidth: 0,
-          labels: {
-            format: '{value} $',
-            style: {
-              color: Highcharts.getOptions().colors[2]
-            }
-          },
-          title: {
-            text: 'Money',
-            style: {
-              color: Highcharts.getOptions().colors[2]
-            }
-          },
-          opposite: true
-        },
-        //roundkills-achse
-        {
-          min: 0,
-          max: 5,
-          startOnTick: false,
-          gridLineWidth: 0,
-          labels: {
-            format: '{value}',
-            style: {
-              color: Highcharts.getOptions().colors[3]
-            }
-          },
-          title: {
-            text: 'Kills',
-            style: {
-              color: Highcharts.getOptions().colors[3]
-            }
-          },
-          opposite: true
-        }
-      ],
-      xAxis: {
-        type: 'datetime',
-        //minTickInterval: 1000 * 0.5, //10 seconds
-        minRange: 1000 * 30,
-        maxRange: 1000 * 155,
-      },
-      tooltip: {
-        shared: true
-      }
-    });
-
-    var chart = $('#livetrackerChart').highcharts();
-
-    //alle datentypen zum diagramm hinzufügen
-    chart.addSeries({
-      "name": "Health",
-      "yAxis": 0,
-      "data": [
-        [+new Date(), null]
-      ],
-      tooltip: {
-        valueSuffix: ' HP'
-      }
-    });
-
-    chart.addSeries({
-      "name": "Armor",
-      "yAxis": 1,
-      "data": [
-        [+new Date(), null]
-      ],
-      tooltip: {
-        valueSuffix: ' AP'
-      }
-    });
-
-    chart.addSeries({
-      "name": "Money",
-      "yAxis": 2,
-      "data": [
-        [+new Date(), null]
-      ],
-      tooltip: {
-        valueSuffix: ' $'
-      }
-    });
-
-    chart.addSeries({
-      "name": "Round-Kills",
-      "data": [
-        [+new Date(), null]
-      ]
-    });
-
-    /*-----------ON LOAD------------------------*/
-
-    //websocket mit default namespace verbinden
-    var socket = io('http://192.168.0.36:3000/');
-
-    //vor laden des fensters cookies überprüfen, wenn eingeloggt livetracker laden, ansonsten main. loggedIn und loginform togglen
-    if (getCookie("login") == "") { //nicht eingeloggt
-      loggedIn = true;
-      toggleLogin();
-      console.log("not logged in");
-    } else { //eingeloggt
-      loggedIn = false;
-      toggleLogin();
-      console.log("logged in");
-      socket.emit('login', getCookie("login"));
-    }
-
-    //user credentials in header anzeigen
-    userId.textContent = "Id: " + getCookie("login");
-    var nick = getCookie("nick");
-    /*if (nick != "undefined") {
-      userNick.textContent = nick;
-    }*/
-
-    /*----------SOCKET.IO-EVENTHANDLING---------*/
-
-    //Event-handling mit server
-    socket.on('connect', function() {
-      if (loggedIn) {
-        socket.emit('login', getCookie("login"))
-      }
-    });
-    socket.on('consoleLog', (text) => {
-      console.log(text);
-    });
-    socket.on('disconnect', function() {
-      console.log("Disconnected from Stattrak-Socket.")
-    })
-
-    //ticks vom server Empfangen
-    socket.on('sendTick', function(payload) {
-      var tick = JSON.parse(payload);
-      console.log("Tick empfangen...");
-      console.dir(tick);
-      //console.log(chart);
-      //TICK ZU DIAGRAMM HINZUFÜGEN
-
-      if (lastTick == null) {
-
-      }  //checken, ob neues match begonnen hat
-      else if (lastTick.matchid != tick.matchid) {
-        console.log("Neues match!!");
-        //chart wipen
-        for (var i = 0; i < chart.series.length; i++) {
-          chart.series[i].setData([], true, false, false);
+        //cookie löschen
+        function deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
 
-      } else if(lastTick.map['round'] != tick.map['round']) {
-        console.log("Neue runde!");
-        //plotline hinzufügen
-        chart.xAxis[0].addPlotLine({
-                //neue runde markieren
-                color: 'red',
-                width: 2,
-                value: tick.provider.timestamp*1000,
-                dashStyle: 'longdashdot'
-            });
-      }
-      //chartuntertitel ändern
-      chart.setTitle({text: "StatTrak"}, {text: "Match: "+tick.matchid+", Round: "+tick.map['round']}, false);
-
-      if(lastTick != null )
-      //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
-      if (lastTick != null) {
-        //health
-        if (tick.player.state.health > lastTick.player.state.health) {
-          chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+        //element-sichtbarkeit togglen
+        function toggleVisibility(el) {
+            if (el.style.display == "block") {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+            }
         }
-        //armor
-        if (tick.player.state.armor > lastTick.player.state.armor) {
-          chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+
+        //TODO seiteninhalt dynamisch ändern parentklasse <li> auf active setzen
+        function setPageView(page) {
+            //durchläuft pagesArray und stellt nur gewünschntes element auf sichtbar
+            console.log("funktion setPageView()");
+            if (loggedIn)
+                for (var i = 0; i < pageIdArray.length; i++) {
+                    if (pageIdArray[i] == this || pageIdArray[i] == page) {
+                        pageWrapperArray[i].style.display = "block";
+                        console.log("Page:");
+                        console.log(pageWrapperArray[i]);
+                        pageLinkArray[i].parentNode.className = "active";
+                    } else {
+                        pageWrapperArray[i].style.display = "none";
+                        pageLinkArray[i].parentNode.className = "";
+                    }
+                }
         }
-      }
-      //health
-      chart.series[0].addPoint([tick.provider.timestamp * 1000, tick.player.state.health], false, true, true);
-      //armor
-      chart.series[1].addPoint([tick.provider.timestamp * 1000, tick.player.state.armor], false, true, true);
-      //money
-      chart.series[2].addPoint([tick.provider.timestamp * 1000, tick.player.state.money], false, true, true);
-      console.log(chart.series[2].data)
-      //roundkills
-      //TODO headshots markieren
-      //TODO scalen
-      chart.series[3].addPoint([tick.provider.timestamp * 1000, tick.player.state['round_kills']], false, true, true);
 
-      //nach hinzufügen aller sichtbaren punkte chart redraw callen
-      chart.redraw();
+        //TODO login-klasse ein- oder ausblenden, dementsprechend parent pageLinkArrayli> class disable, seite auf main oder livetracker setzen und logout-button togglen, loggedIn togglen
+        function toggleLogin() {
+            console.log("Funktion: toggleLogin()");
+            if (loggedIn) { //eingeloggt, loginform ausblenden
+                cfgDlLink.parentNode.className = "";
+                liveLink.parentNode.className = "";
+                setPageView(pageIdArray[1]);
+            } else { //ausgeloggt, loginform einblenden
+                cfgDlLink.parentNode.className = "disabled";
+                liveLink.parentNode.className = "disabled";
+                setPageView(pageIdArray[0]); //TODO KLAPPT NICHT MIT DER SEITE
+            }
+            toggleVisibility(loginFormEl);
+            toggleVisibility(logoutForm);
+        }
 
-    /*  ////nullpunkte nach daten auf 0 oder steigenden daten einfügen, um linie zu beenden
-      for (var i = 0; i < chart.series.length; i++) {
-          //checken, ob letzter wert der serie 0 war
-        if (chart.series[i].data[chart.series[i].data.length - 1].y == 0) {
-          //falls ja, nullpunkt eine millisekunde später einfügen
-          chart.series[i].addPoint([tick.provider.timestamp * 1000 + 1, null], false);
-        } //else if(chart.series[i].data[chart.series[i].data.length-2].y < )
-        //TODO bei steigenden daten vorher nullpunkt einfügen
-        //letzten tick zum vergleich abspeichern
-      }*/
-      lastTick = tick;
+        /*----------------------AJAX-FORMS--------------------------------*/
+
+        //mit XMLHttpRequest .cfg file erstellen lassen, nach antwort herunterladen
+        var downloadCfg = function() {
+            //nur ausführen, wenn user eingeloggt ist
+            if (!loggedIn) {
+                return;
+            }
+            var userId = getCookie("login");
+
+            var xhttp = new XMLHttpRequest();
+            var reqPath = "/cacheCfgFile";
+
+            //serverantwort erwarten
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    console.log("cfg file cached, downloading...");
+                    window.open('gamestate_integration_stattrak.cfg');
+                };
+            }
+            xhttp.open("POST", reqPath, true);
+            xhttp.setRequestHeader("Content-type", "text/html");
+            xhttp.send(userId);
+            console.log("cfg file caching requested for " + userId);
+        }
+
+        //neue ticks auslesen
+        var getLastTick = function() {
+            var xhttp = new XMLHttpRequest();
+            var reqPath = "/getLastTick";
+            var pl = {
+                login: getCookie("login"),
+                lastTickId: lastTick
+            };
+            var plString = JSON.stringify(pl);
+
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    document.getElementById("tick").innerHTML = JSON.parse(xhttp.responseText);
+                    console.log(JSON.parse(xhttp.responseText));
+                }
+            };
+            xhttp.open("POST", reqPath, true);
+            xhttp.setRequestHeader("Content-type", "text/html");
+            xhttp.send(plString);
+            console.log(reqPath + " send, data:");
+            console.dir(pl);
+        }
+
+        //login bei server
+        //TODO input überprüfen!
+        function login() {
+            console.log("Login called...");
+            var xhttp = new XMLHttpRequest();
+            var reqPath = "/userLogin";
+            var remember = false;
+
+            if (checkEl.checked) {
+                remember = true;
+            }
+
+            var jsonPost = {
+                id: steamIdEl.value,
+                remember: remember
+            };
+            var jsonPostString = JSON.stringify(jsonPost);
+
+            console.log(jsonPostString);
+
+            //antwort auf login erwarten
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    //nach erfolgreichem login links togglen, livetracker aufrufen und zu websocket connecten
+                    console.log("XMLHttpRequest answered");
+                    userId.textContent = "Id: " + getCookie("login");
+                    loggedIn = true;
+                    toggleLogin();
+                    socket.emit('login', getCookie("login"));
+                }
+            };
+
+            xhttp.open("POST", reqPath, true);
+            xhttp.setRequestHeader("Content-type", "text/html");
+            xhttp.send(jsonPostString);
+            console.log("XMLHttpRequest send  " + reqPath);
+        }
+
+        //logout: cookies entfernen, loginform togglen, socket disconnecten
+        var logout = function() {
+            loggedIn = false;
+            toggleLogin();
+            deleteCookie('login');
+            deleteCookie('nick');
+            socket.emit('logout');
+        }
+
+        /*-------------------HICHCHARTS.JS-IMPLEMENTIERUNG-------------------------*/
+
+
+        $('#livetrackerChart').highcharts({
+            chart: {
+                type: 'spline',
+                zoomtype: 'x',
+                alignTicks: false
+            },
+            title: {
+                text: 'StatTrak'
+            },
+            subtitle: {
+                text: 'No Match running'
+            },
+            plotOptions: {
+                series: {
+                    marker: {
+                        enabled: true
+                    }
+                }
+            },
+            //TODO alle achsen einfügen
+            yAxis: [
+                //health-achse
+                {
+                    min: 0,
+                    max: 100,
+                    startOnTick: false,
+                    labels: {
+                        format: '{value} HP',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                    title: {
+                        text: 'Health',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                },
+                //armor-achse
+                {
+                    min: 0,
+                    max: 100,
+                    startOnTick: false,
+                    labels: {
+                        format: '{value} AP',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Armor',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                },
+                //money-achse
+                {
+                    min: 0,
+                    max: 16000,
+                    startOnTick: false,
+                    endOnTick: false,
+                    gridLineWidth: 0,
+                    labels: {
+                        format: '{value} $',
+                        style: {
+                            color: Highcharts.getOptions().colors[2]
+                        }
+                    },
+                    title: {
+                        text: 'Money',
+                        style: {
+                            color: Highcharts.getOptions().colors[2]
+                        }
+                    },
+                    opposite: true
+                },
+                //roundkills-achse
+                {
+                    min: 0,
+                    max: 5,
+                    startOnTick: false,
+                    gridLineWidth: 0,
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[3]
+                        }
+                    },
+                    title: {
+                        text: 'Kills',
+                        style: {
+                            color: Highcharts.getOptions().colors[3]
+                        }
+                    },
+                    opposite: true
+                }
+            ],
+            xAxis: {
+                type: 'datetime',
+                //minTickInterval: 1000 * 0.5, //10 seconds
+                minRange: 1000 * 30,
+                maxRange: 1000 * 155
+            },
+            tooltip: {
+                shared: true
+            }
+        });
+
+        var chart = $('#livetrackerChart').highcharts();
+
+        //alle datentypen zum diagramm hinzufügen
+        chart.addSeries({
+            "name": "Health",
+            "yAxis": 0,
+            "data": [
+                [+new Date(), null]
+            ],
+            tooltip: {
+                valueSuffix: ' HP'
+            }
+        });
+
+        chart.addSeries({
+            "name": "Armor",
+            "yAxis": 1,
+            "data": [
+                [+new Date(), null]
+            ],
+            tooltip: {
+                valueSuffix: ' AP'
+            }
+        });
+
+        chart.addSeries({
+            "name": "Money",
+            "yAxis": 2,
+            "data": [
+                [+new Date(), null]
+            ],
+            tooltip: {
+                valueSuffix: ' $'
+            }
+        });
+
+        chart.addSeries({
+            "name": "Round-Kills",
+            "yAxis": 3,
+            "data": [
+                [+new Date(), null]
+            ]
+        });
+
+        /*-----------ON LOAD------------------------*/
+
+        //websocket mit default namespace verbinden
+        var socket = io('http://192.168.0.36:3000/');
+
+        //vor laden des fensters cookies überprüfen, wenn eingeloggt livetracker laden, ansonsten main. loggedIn und loginform togglen
+        if (getCookie("login") == "") { //nicht eingeloggt
+            loggedIn = false;
+            console.log("not logged in");
+            toggleLogin();
+            toggleVisibility(loginFormEl);
+            toggleVisibility(logoutForm);
+        } else { //eingeloggt
+            loggedIn = true;
+            console.log("logged in");
+            toggleLogin();
+            socket.emit('login', getCookie("login"));
+        }
+
+        //user credentials in header anzeigen
+        userId.textContent = "Id: " + getCookie("login");
+        var nick = getCookie("nick");
+        /*if (nick != "undefined") {
+          userNick.textContent = nick;
+        }*/
+
+        /*----------SOCKET.IO-EVENTHANDLING---------*/
+
+        //Event-handling mit server
+        socket.on('connect', function() {
+            if (loggedIn) {
+                socket.emit('login', getCookie("login"))
+            }
+        });
+        socket.on('consoleLog', (text) => {
+            console.log(text);
+        });
+        socket.on('disconnect', function() {
+            console.log("Disconnected from Stattrak-Socket.")
+        })
+
+        //ticks vom server Empfangen
+        socket.on('sendTick', function(payload) {
+            var tick = JSON.parse(payload);
+            console.log("Tick empfangen...");
+            console.dir(tick);
+            //console.log(chart);
+            //TICK ZU DIAGRAMM HINZUFÜGEN
+
+            if (lastTick == null) {
+
+            } //checken, ob neues match begonnen hat
+            else if (lastTick.matchid != tick.matchid) {
+                console.log("Neues match!!");
+                //chart wipen
+                for (var i = 0; i < chart.series.length; i++) {
+                    chart.series[i].setData([], true, false, false);
+                }
+
+            } else if (lastTick.map['round'] != tick.map['round']) {
+                console.log("Neue runde!");
+                //plotline hinzufügen
+                chart.xAxis[0].addPlotLine({
+                    //neue runde markieren
+                    color: 'red',
+                    width: 2,
+                    value: tick.provider.timestamp * 1000,
+                    dashStyle: 'longdashdot'
+                });
+                //nullpunkte für werte hinzufügen, welche nicht über runden erhalten bleiben
+                //health
+                chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+                //armor
+                chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+                //roundkills
+                chart.series[3].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+            }
+            //chartuntertitel ändern
+            chart.setTitle({
+                text: "StatTrak"
+            }, {
+                text: "Match: " + tick.matchid + ", Round: " + tick.map['round']
+            }, false);
+
+            if (lastTick != null) {
+              //neue punkte shiften, wenn zeitunterschied auf x-Achse > definierter werte
+              shift = maxTimeSpanDisplay < chart.xAxis[0].max - chart.xAxis[0].min;
+
+                          //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
+                //health
+                if (tick.player.state.health > lastTick.player.state.health) {
+                    chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+                }
+                //armor
+                if (tick.player.state.armor > lastTick.player.state.armor) {
+                    chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+                }
+            }
+
+            //health
+            chart.series[0].addPoint([tick.provider.timestamp * 1000, tick.player.state.health], true, shift, false);
+            //armor
+            chart.series[1].addPoint([tick.provider.timestamp * 1000, tick.player.state.armor], true, shift, false);
+            //money
+            chart.series[2].addPoint([tick.provider.timestamp * 1000, tick.player.state.money], true, shift, false);
+            //roundkills
+            //TODO headshots markieren
+            //TODO scalen
+            chart.series[3].addPoint([tick.provider.timestamp * 1000, tick.player.state['round_kills']], true, shift, false);
+
+            //nach hinzufügen aller sichtbaren punkte chart redraw callen
+            chart.redraw();
+
+            /*  ////nullpunkte nach daten auf 0 oder steigenden daten einfügen, um linie zu beenden
+              for (var i = 0; i < chart.series.length; i++) {
+                  //checken, ob letzter wert der serie 0 war
+                if (chart.series[i].data[chart.series[i].data.length - 1].y == 0) {
+                  //falls ja, nullpunkt eine millisekunde später einfügen
+                  chart.series[i].addPoint([tick.provider.timestamp * 1000 + 1, null], false);
+                } //else if(chart.series[i].data[chart.series[i].data.length-2].y < )
+                //TODO bei steigenden daten vorher nullpunkt einfügen
+                //letzten tick zum vergleich abspeichern
+              }*/
+            lastTick = tick;
+        });
+
+        //Listener hinzufügen
+        mainLink.addEventListener("click", setPageView);
+        liveLink.addEventListener("click", setPageView);
+        loginButtonEl.addEventListener("click", login);
+        cfgDlLink.addEventListener("click", downloadCfg);
+        logoutButtonEl.addEventListener("click", logout);
     });
-
-    //Listener hinzufügen
-    mainLink.addEventListener("click", setPageView);
-    liveLink.addEventListener("click", setPageView);
-    loginButtonEl.addEventListener("click", login);
-    cfgDlLink.addEventListener("click", downloadCfg);
-    logoutButtonEl.addEventListener("click", logout);
-  });
 </script>
