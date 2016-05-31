@@ -47,6 +47,10 @@
             font-family: Waree, Book;
         }
 
+        .navbar {
+            margin-bottom: 0px;
+        }
+
         .userinfo {
             font-size: 14px;
             font-family: Helvetica;
@@ -102,6 +106,18 @@
             color: white;
             height: 100%;
             z-index: 5;
+        }
+
+        #matchStatsContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-content: flex-start;
+        }
+
+        .matchStatsItem {
+            flex-basis: 7vw;
+            font-size: 1.25em;
         }
     </style>
 </head>
@@ -172,6 +188,14 @@
     <!--anfang livetracker-->
     <div id="livetrackerPageWrapper" style="display: none;" class="livetrackerPage pageWrapper">
         <div id="livetrackerChart" style="width:100%; height:400px;"></div>
+        <div id="matchStatsContainer">
+            <p id="kills" class="matchStatsItem">Kills: </p>
+            <p id="assists" class="matchStatsItem">Assists: </p>
+            <p id="deaths" class="matchStatsItem">Deaths: </p>
+            <p id="mvps" class="matchStatsItem">MvP's: </p>
+            <p id="score" class="matchStatsItem">Score: </p>
+        </div>
+        <!--hier kommen die matchstats rein-->
     </div>
     <!--ende livetracker-->
 
@@ -221,7 +245,8 @@
 
         //highcharts
         var shift = false;
-        var maxTimeSpanDisplay = 155*1000;
+        var maxTimeSpanDisplay = 155 * 1000;
+        var matchStats = document.getElementById('matchStatsContainer');
 
         //cookie-getter
         function getCookie(cname) {
@@ -584,8 +609,15 @@
             console.log("Tick empfangen...");
             console.dir(tick);
             //console.log(chart);
-            //TICK ZU DIAGRAMM HINZUFÜGEN
+            //matchstats aktualisieren
+            $('#kills').text('Kills: '+tick.player['match_stats'].kills);
+            $('#assists').text('Assists: '+tick.player['match_stats'].assists);
+            $('#deaths').text('Deaths: '+tick.player['match_stats'].deaths);
+            $('#mvps').text('MvPs: '+tick.player['match_stats'].mvps);
+            $('#score').text('Score: '+tick.player['match_stats'].score);
 
+
+            //TICK ZU DIAGRAMM HINZUFÜGEN
             if (lastTick == null) {
 
             } //checken, ob neues match begonnen hat
@@ -612,7 +644,7 @@
                 //armor
                 chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
                 //roundkills
-                chart.series[3].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
+                chart.series[3].addPoint([tick.provider.timestamp * 1000 + 1, null], false);
             }
             //chartuntertitel ändern
             chart.setTitle({
@@ -622,10 +654,10 @@
             }, false);
 
             if (lastTick != null) {
-              //neue punkte shiften, wenn zeitunterschied auf x-Achse > definierter werte
-              shift = maxTimeSpanDisplay < chart.xAxis[0].max - chart.xAxis[0].min;
+                //neue punkte shiften, wenn zeitunterschied auf x-Achse > definierter werte
+                shift = maxTimeSpanDisplay < chart.xAxis[0].getExtremes().max - chart.xAxis[0].getExtremes().min;
 
-                          //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
+                //wenn vorige daten vorhanden, checken ob vor gewissen daten ein nullpunkt gesetzt werden soll
                 //health
                 if (tick.player.state.health > lastTick.player.state.health) {
                     chart.series[0].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
@@ -634,6 +666,26 @@
                 if (tick.player.state.armor > lastTick.player.state.armor) {
                     chart.series[1].addPoint([tick.provider.timestamp * 1000 - 1, null], false);
                 }
+                /*console.log(chart.series[0])
+                if (chart.series[0].data[1] !== 'undefined') {
+                    //TODO wenn neuer wert gleich dem alten, marker des letzten punkts entfernen
+                    //health
+                    if (tick.player.state.health == lastTick.player.state.health) {
+                        chart.series[0].data[chart.series[0].data.length-1].marker.enabled = false;
+                    }
+                    //armor
+                    if (tick.player.state.armor == lastTick.player.state.armor) {
+                        chart.series[1].data[chart.series[1].data.length-1].marker.enabled = false;
+                    }
+                    //money
+                    if (tick.player.state.money == lastTick.player.state.money) {
+                        chart.series[2].data[chart.series[2].data.length-1].marker.enabled = false;
+                    }
+                    //roundkills
+                    if (tick.player.state['round_kills'] == lastTick.player.state['round_kills']) {
+                        chart.series[3].data[chart.series[3].data.length-1].marker.enabled = false;
+                    }
+                }*/
             }
 
             //health
@@ -644,9 +696,7 @@
             chart.series[2].addPoint([tick.provider.timestamp * 1000, tick.player.state.money], true, shift, false);
             //roundkills
             //TODO headshots markieren
-            //TODO scalen
             chart.series[3].addPoint([tick.provider.timestamp * 1000, tick.player.state['round_kills']], true, shift, false);
-
             //nach hinzufügen aller sichtbaren punkte chart redraw callen
             chart.redraw();
 
