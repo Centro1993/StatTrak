@@ -1,5 +1,4 @@
 //TODO: Redundanz einfügen (try/ catch)
-//TODO: chart.js
 mdb = require('mongodb').MongoClient;
 assert = require('assert');
 http = require('http');
@@ -24,8 +23,6 @@ var portOpen;
 var matchId;
 
 var socketListeners = [];
-
-const DEBUG = true;
 
 //mit mongodb-datenbank verbinden
 var url = 'mongodb://localhost:27017/csgo';
@@ -630,7 +627,7 @@ var handleRequest = function(req, res) {
                   });
 
                   //anhand von rundendifferenz prüfen, ob neues match stattfindet
-                  //TODO matchüberprüfung anhand von runden-/mapdifferenz, time
+                  //matchüberprüfung anhand von runden-/mapdifferenz, time
                   function checkRoundDelta(db, payload, lastMatch, lastPayload, callback) {
                     //wenn allererste runde, match 1 erstellen
                     if (lastMatch == null || lastPayload == null) {
@@ -787,7 +784,7 @@ var handleRequest = function(req, res) {
       res.end('');
     });
 
-    /*----------------XMLHTTP-REQUESTS----------------------------------*/
+    /*----------------REST-API----------------------------------*/
 
     //User-login
     dispatcher.onPost("/userLogin", function(req, res) {
